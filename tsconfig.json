@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "module": "nodenext",
+    "target": "esnext",
+    "esModuleInterop": true,
+    "strict": true,
+
+    
+    "types": ["node"],
+    
+   
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true
+  },
+  "include": [ "src" ],
+  "exclude": [ "node_modules", "dist" ]
+}
