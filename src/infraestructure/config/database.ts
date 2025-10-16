@@ -8,18 +8,18 @@ import envs from './environment-vars.js';
 import { User } from '../entities/User.js';
 import { Barrio } from '../entities/Barrio.js';
 import { Coordenadas } from '../entities/Coordenadas.js';
-import { Favorite } from '../entities/Favorite.js'; // <-- 1. Importa la entidad que falta
+import { Favorite } from '../entities/Favorite.js'; 
 
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: envs.DB_HOST,
-    port: Number(envs.DB_PORT), // Es mejor usar la variable validada de 'envs'
+    port: Number(envs.DB_PORT), 
     username: envs.DB_USER,
     password: envs.DB_PASSWORD,
     database: envs.DB_NAME,
-    synchronize: false, // <-- Recomendación: ponlo en 'false' para evitar perder datos
+    synchronize: false,
     logging: true,
-    entities: [User, Barrio, Coordenadas, Favorite] // <-- 2. Añade Favorite y corrige Coordenadas
+    entities: [User, Barrio, Coordenadas, Favorite] 
 });
 
 // función connectDB para inicializar la conexión

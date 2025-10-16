@@ -8,16 +8,12 @@ export class Favorite {
     @PrimaryGeneratedColumn({ name: "idfave" })
     id!: number;
 
-    /**
-     * RELACIÓN UNO A UNO CON BARRIO
-     * Un favorito pertenece a un único barrio.
-     * @JoinColumn indica que esta tabla contiene la clave foránea.
-     */
-    @OneToOne("Barrio") // <-- CAMBIO AQUÍ
+   
+    @OneToOne("Barrio") 
     @JoinColumn({ name: "idbar" })
     barrio!: Barrio;
 
-    @ManyToOne("User", (user: User) => user.favorites) // <-- CAMBIO AQUÍ
+    @ManyToOne("User", (user: User) => user.favorites) 
     @JoinColumn({ name: "iduser" })
     user!: User;
 }

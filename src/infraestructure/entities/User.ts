@@ -25,6 +25,6 @@ export class User {
     this.password = await bcrypt.hash(this.password, salt);
   }
 
-  @OneToMany("Favorite", (favorite: Favorite) => favorite.user) // <-- CAMBIO AQUÍ
+  @OneToMany("Favorite", (favorite: Favorite) => favorite.user) 
     favorites!: Favorite[];
 }

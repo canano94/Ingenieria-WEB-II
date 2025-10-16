@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UserRepository } from "../adapter/UserRepository.js";
+import { UserRepository } from "../adapter/UserAdapter.js";
 import { UserApplicationService } from "../../application/UserApplicationService.js";
 import { UserController } from "../controller/UserController.js";
 

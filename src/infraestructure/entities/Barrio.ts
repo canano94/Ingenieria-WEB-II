@@ -18,13 +18,7 @@ export class Barrio {
     @Column({ type: "varchar", nullable: true })
     porcentaje?: string;
 
-    /**
-     * Define el otro lado de la relación 1 a 1.
-     * Esto te permitirá acceder a las coordenadas desde un objeto Barrio,
-     * por ejemplo: `miBarrio.coordenadas`.
-     * 'cascade: true' es útil para que al guardar un Barrio,
-     * también se guarden/actualicen sus coordenadas asociadas.
-     */
+
     @OneToOne(() => Coordenadas, (coordenadas) => coordenadas.barrio, {
         cascade: true,
     })
