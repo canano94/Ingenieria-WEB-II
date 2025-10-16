@@ -1,29 +1,35 @@
 // Ubicación: src/infraestructure/entities/Barrio.ts
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
+import { Coordenadas } from "./Coordenadas.js";
+import { Favorite } from "./Favorite.js";
 
 @Entity({ name: "barrio" })
 export class Barrio {
-  @PrimaryGeneratedColumn({ type: "int" })
-  id_bar!: number;
+    // La columna en tu diagrama se llama 'id', usamos esa.
+    @PrimaryGeneratedColumn()
+    id!: number;
 
-  @Column({ type: "varchar", length: 100, nullable: true })
-  nam_bar!: string;
+    @Column({ type: "varchar" })
+    nam_bar!: string;
 
-  @Column({ type: "decimal", precision: 10, scale: 6 })
-  cor_sur!: number;
+    @Column({ type: "integer" })
+    ind_seg!: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 6 })
-  cor_nor!: number;
+    @Column({ type: "varchar", nullable: true })
+    porcentaje?: string;
 
-  @Column({ type: "decimal", precision: 10, scale: 6 })
-  cor_ori!: number;
+    /**
+     * Define el otro lado de la relación 1 a 1.
+     * Esto te permitirá acceder a las coordenadas desde un objeto Barrio,
+     * por ejemplo: `miBarrio.coordenadas`.
+     * 'cascade: true' es útil para que al guardar un Barrio,
+     * también se guarden/actualicen sus coordenadas asociadas.
+     */
+    @OneToOne(() => Coordenadas, (coordenadas) => coordenadas.barrio, {
+        cascade: true,
+    })
+    coordenadas!: Coordenadas;
 
-  @Column({ type: "decimal", precision: 10, scale: 6 })
-  cor_occ!: number;
-
-  @Column({ type: "int" })
-  ind_seg!: number;
-
-  @Column({ type: "varchar", length: 10, nullable: true })
-  porcentaje?: string;
+    @OneToOne(() => Favorite, (favorite) => favorite.barrio)
+    favorite!: Favorite;
 }

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToMany } from "typeorm";
+import { Favorite } from "./Favorite.js";
 import bcrypt from "bcrypt";
 
 @Entity({ name: "users" })
@@ -23,4 +24,7 @@ export class User {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
+
+  @OneToMany("Favorite", (favorite: Favorite) => favorite.user) // <-- CAMBIO AQUÍ
+    favorites!: Favorite[];
 }

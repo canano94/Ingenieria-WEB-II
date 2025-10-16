@@ -4,21 +4,22 @@ import { DataSource } from 'typeorm';
 import 'dotenv/config';
 import envs from './environment-vars.js';
 
-// Importar entidades 
+// Importar todas tus entidades
 import { User } from '../entities/User.js';
 import { Barrio } from '../entities/Barrio.js';
-import { Coordenada } from '../entities/Cordenada.js';
+import { Coordenadas } from '../entities/Coordenadas.js';
+import { Favorite } from '../entities/Favorite.js'; // <-- 1. Importa la entidad que falta
 
 export const AppDataSource = new DataSource({
-    type: "postgres", 
+    type: "postgres",
     host: envs.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: true,
+    port: Number(envs.DB_PORT), // Es mejor usar la variable validada de 'envs'
+    username: envs.DB_USER,
+    password: envs.DB_PASSWORD,
+    database: envs.DB_NAME,
+    synchronize: false, // <-- Recomendación: ponlo en 'false' para evitar perder datos
     logging: true,
-    entities: [User, Barrio, Coordenada]
+    entities: [User, Barrio, Coordenadas, Favorite] // <-- 2. Añade Favorite y corrige Coordenadas
 });
 
 // función connectDB para inicializar la conexión
