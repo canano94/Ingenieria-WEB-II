@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import userRoutes from "./infraestructure/routes/userroutes.js";
 import barrioRoutes from "./infraestructure/routes/BarrioRoutes.js";
+import favoriteRouter from './infraestructure/routes/FavoriteRoutes.js';
 
 class App {
   private app: express.Application;
@@ -23,6 +24,9 @@ class App {
 
     // Módulo Barrios
     this.app.use("/api/barrios", barrioRoutes);
+
+    // Módulo Favoritos
+    this.app.use("/api/favorites", favoriteRouter);
   }
 
   getApp() {

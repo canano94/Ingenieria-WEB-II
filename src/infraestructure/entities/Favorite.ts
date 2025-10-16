@@ -5,7 +5,7 @@ import { User } from "./User.js"; // Asegúrate de importar tu entidad User
 
 @Entity({ name: "favorite" })
 export class Favorite {
-    @PrimaryGeneratedColumn({ name: "idfave" })
+    @PrimaryGeneratedColumn({ name: "idfav" })
     id!: number;
 
    
