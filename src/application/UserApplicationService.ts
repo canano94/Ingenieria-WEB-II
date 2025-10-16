@@ -1,5 +1,13 @@
 import { User } from "../infraestructure/entities/User.js";
 import type { UserPort } from "../domain/UserPort.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import envs from "../infraestructure/config/environment-vars.js";
+
+interface LoginDto {
+    email: string;
+    password: string;
+}
 
 export class UserApplicationService {
   private readonly port: UserPort;
@@ -32,6 +40,11 @@ export class UserApplicationService {
         throw new Error("El email ya está en uso.");
     }
 
+    if (user.password) {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(user.password, salt);
+        }
+
     return this.port.updateUser(id, user);
   }
 
@@ -40,4 +53,26 @@ export class UserApplicationService {
     if (!existingUser) throw new Error("Usuario no encontrado.");
     return this.port.deleteUser(id);
   }
+
+  async loginUser(loginData: LoginDto): Promise<string | null> {
+        const user = await this.port.getUserByEmail(loginData.email);
+        if (!user) {
+            return null; // Usuario no encontrado
+        }
+
+        const isPasswordValid = await bcrypt.compare(loginData.password, user.password);
+        if (!isPasswordValid) {
+            return null; // Contraseña incorrecta
+        }
+
+        // Si el usuario y la contraseña son correctos, generamos el token
+        const payload = { id: user.id, email: user.email };
+        const token = jwt.sign(payload, envs.JWT_SECRET, {
+            expiresIn: '1h' // El token expira en 1 hora
+        });
+
+        return token;
+    }
+
+
 }

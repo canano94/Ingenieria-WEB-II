@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import userRoutes from "./infraestructure/routes/user.routes.js";
+import userRoutes from "./infraestructure/routes/userroutes.js";
 import barrioRoutes from "./infraestructure/routes/BarrioRoutes.js";
 
 class App {
