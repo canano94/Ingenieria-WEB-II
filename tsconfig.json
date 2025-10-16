@@ -2,23 +2,18 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-
-    "module": "nodenext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2022",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "strict": true,
-
-    
     "types": ["node"],
-    
-   
     "sourceMap": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": true,
     "isolatedModules": true
   },
-  "include": [ "src" ],
-  "exclude": [ "node_modules", "dist" ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

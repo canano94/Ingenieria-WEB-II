@@ -1,21 +1,26 @@
-// Ubicación: src/infraestructure/entities/User.ts
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import bcrypt from "bcrypt";
 
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class User {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column()
-    name!: string;
+  @Column({ type: "varchar", length: 100 })
+  name!: string;
 
-    @Column({ unique: true })
-    email!: string;
+  @Column({ type: "varchar", length: 100, unique: true })
+  email!: string;
 
-    @Column()
-    password!: string;
+  @Column({ type: "varchar", length: 255 })
+  password!: string;
 
-    @Column({ default: 1 })
-    status!: number;
+  @Column({ type: "int", default: 1 })
+  status!: number;
+
+  @BeforeInsert()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }

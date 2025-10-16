@@ -2,6 +2,7 @@
 
 import { DataSource } from 'typeorm';
 import 'dotenv/config';
+import envs from './environment-vars.js';
 
 // Importar entidades 
 import { User } from '../entities/User.js';
@@ -10,7 +11,7 @@ import { Coordenada } from '../entities/Cordenada.js';
 
 export const AppDataSource = new DataSource({
     type: "postgres", 
-    host: process.env.DB_HOST,
+    host: envs.DB_HOST,
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
