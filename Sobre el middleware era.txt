@@ -1,0 +1,26 @@
+Sobre el middleware era
+import { authMiddleware } from "./infraestructure/web/middleware/authMiddleware.js";
+
+Ahora aca
+// Controladores
+  private userController: UserController;
+
+Me aparace 
+"UserController" hace referencia a un valor, pero aquí se usa como tipo. ¿Quiso decir "typeof UserController"?ts(2749)
+
+Y aca 
+this.userController = new UserController(this.userService);
+
+No se puede construir esta expresión.
+  El tipo "UserController" no tiene signaturas de construcción.ts(2351)
+
+
+lg 10 scale 6
+id_bar
+cor_sur
+cor_nor
+cor_ori
+cor_occ
+
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbGVqb0B0ZXN0LmNvbSIsImlhdCI6MTc2MDY1MDg4NywiZXhwIjoxNzYwNjU0NDg3fQ.dNJkuX1HpGg17pis1EqUGv0JnzotHqA7-RfDIdXg3Ac
