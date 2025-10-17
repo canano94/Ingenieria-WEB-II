@@ -1,19 +1,19 @@
 
 # API de Seguridad Barrial - Bogotá 
 
-Esta es una API REST full-stack construida con Node.js, Express, TypeScript y PostgreSQL, siguiendo una **Arquitectura Hexagonal (Puertos y Adaptadores)**. La aplicación permite a los usuarios registrarse, autenticarse y gestionar una lista de sus barrios favoritos en Bogotá, además de consultar información sobre la seguridad de cualquier barrio a partir de sus coordenadas geográficas.
+Esta es una API REST full-stack construida con Node.js, Express, TypeScript y PostgreSQL, siguiendo una Arquitectura Hexagonal (Puertos y Adaptadores). La aplicación permite a los usuarios registrarse, autenticarse y gestionar una lista de sus barrios favoritos en Bogotá, además de consultar información sobre la seguridad de cualquier barrio a partir de sus coordenadas geográficas.
 
 ## Características Principales
 
-  - **Arquitectura Limpia:** Implementación del patrón de **Puertos y Adaptadores** para un código desacoplado, mantenible y escalable.
-  - **Autenticación Segura:** Sistema completo de registro y login de usuarios con contraseñas encriptadas (`bcrypt`) y autenticación basada en **Tokens JWT**.
+  - **Arquitectura Limpia:** Implementación del patrón de Puertos y Adaptadores para un código desacoplado, mantenible y escalable.
+  - **Autenticación Segura:** Sistema completo de registro y login de usuarios con contraseñas encriptadas (`bcrypt`) y autenticación basada en Tokens JWT.
   - **CRUD de Usuarios:** Gestión completa de usuarios (crear, leer, actualizar, borrar) con rutas protegidas.
   - **CRUD de Barrios:** Gestión completa de los barrios y sus coordenadas geográficas.
   - **CRUD de Favoritos:** Sistema seguro donde cada usuario puede gestionar su propia lista de barrios favoritos.
   - **Búsqueda Geográfica:** Endpoint para consultar un barrio a partir de un punto de latitud y longitud.
   - **Stack Moderno:** Construido con Express.js, TypeScript, PostgreSQL y TypeORM.
 
-## 🛠️ Prerrequisitos
+##  Prerrequisitos
 
 Asegúrate de tener instalado lo siguiente en tu sistema:
 
