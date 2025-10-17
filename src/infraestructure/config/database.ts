@@ -1,15 +1,15 @@
-// src/infraestructure/config/database.ts
-
+// Configuración de la base de datos con TypeORM
 import { DataSource } from 'typeorm';
 import 'dotenv/config';
 import envs from './environment-vars.js';
 
-// Importar todas tus entidades
+// Importar todas las entidades definidas
 import { User } from '../entities/User.js';
 import { Barrio } from '../entities/Barrio.js';
 import { Coordenadas } from '../entities/Coordenadas.js';
 import { Favorite } from '../entities/Favorite.js'; 
 
+// Configuración del DataSource
 export const AppDataSource = new DataSource({
     type: "postgres",
     host: envs.DB_HOST,
@@ -26,9 +26,9 @@ export const AppDataSource = new DataSource({
 export const connectDB = async () => {
     try {
         await AppDataSource.initialize();
-        console.log("PostgreSQL Data Source has been initialized!");
+        console.log("PostgreSQL encendido!");
     } catch (error) {
-        console.error("Error during Data Source initialization:", error);
+        console.error("Error al iniciar PostgreSQL:", error);
         process.exit(1);
     }
 };

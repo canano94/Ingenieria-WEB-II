@@ -7,7 +7,7 @@ interface EnvironmentVars {
     DB_USER: string;
     DB_PASSWORD?: string;
     DB_NAME: string;
-    JWT_SECRET: string; // <-- Esta es la variable que faltaba
+    JWT_SECRET: string; 
 }
 
 // Creamos un objeto 'envs' que exporta las variables de entorno de forma segura y tipada.
@@ -17,12 +17,7 @@ const envs: EnvironmentVars = {
     DB_USER: process.env.DB_USER || 'postgres',
     DB_PASSWORD: process.env.DB_PASSWORD,
     DB_NAME: process.env.DB_NAME || 'database',
-    JWT_SECRET: process.env.JWT_SECRET || 'default-secret-key' // Añadimos un valor por defecto por seguridad
+    JWT_SECRET: process.env.JWT_SECRET || 'default-secret-key' 
 };
-
-// Validamos que el JWT_SECRET esté definido, ya que es crítico para la seguridad.
-if (envs.JWT_SECRET === 'default-secret-key') {
-    console.warn('ADVERTENCIA: La variable de entorno JWT_SECRET no está definida. Usando valor por defecto.');
-}
 
 export default envs;

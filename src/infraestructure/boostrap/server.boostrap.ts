@@ -1,3 +1,4 @@
+//Servidor HTTP con Express
 import http from 'http';
 import express from 'express';
 
@@ -14,11 +15,11 @@ export class ServerBoostrap {
             const PORT = process.env.PORT || 4000;
             server.listen(PORT)
             .on("listening",()=>{
-                console.log("Server is runing at port "+PORT);
+                console.log("Servidoriniciado en el puerto "+PORT);
                 resolve(true);
             })
             .on("error",(err)=>{
-                console.log("Error starting server on port: "+err);
+                console.log("Error al iniciar el servidor en el puerto: "+err);
                 reject(false);
             })
 

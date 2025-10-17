@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, OneToMany } from 
 import { Favorite } from "./Favorite.js";
 import bcrypt from "bcrypt";
 
+// @Entity le dice a TypeORM que esta clase es un mapa para la tabla 'users'.
 @Entity({ name: "users" })
 export class User {
   @PrimaryGeneratedColumn()
@@ -19,12 +20,13 @@ export class User {
   @Column({ type: "int", default: 1 })
   status!: number;
 
+  // Antes de insertar un nuevo usuario, encripta la contraseña.
   @BeforeInsert()
   async hashPassword() {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
-
+  // @OneToMany define una relación uno a muchos con la entidad Favorite.
   @OneToMany("Favorite", (favorite: Favorite) => favorite.user) 
     favorites!: Favorite[];
 }

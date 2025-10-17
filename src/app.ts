@@ -17,7 +17,7 @@ class App {
   }
 
   private routes(): void {
-    this.app.get("/", (req: Request, res: Response) => res.send("API funcionando correctamente ✅"));
+    this.app.get("/", (req: Request, res: Response) => res.send("API funcionando correctamente"));
 
     // Módulo Users
     this.app.use("/api/users", userRoutes);

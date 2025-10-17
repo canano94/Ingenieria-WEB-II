@@ -14,7 +14,7 @@ const server = new ServerBoostrap(app);
     await connectDB();
     await server.init();
   } catch (error) {
-    console.error("❌ Error starting server:");
+    console.error("Error starting server:");
     console.error(error instanceof Error ? error.stack : error);
     process.exit(1);
   }

@@ -40,7 +40,7 @@ export class FavoriteAdapter implements FavoritePort {
             relations: ["user"],
         });
     }
-
+    
     async deleteFavorite(favoriteId: number): Promise<boolean> {
         const result = await this.favoriteRepository.delete(favoriteId);
         return result.affected !== null && result.affected! > 0;

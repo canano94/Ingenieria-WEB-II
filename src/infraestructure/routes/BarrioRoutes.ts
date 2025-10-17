@@ -1,27 +1,27 @@
-// Ubicación: src/infraestructure/routes/BarrioRoutes.ts
-
 import { Router } from "express";
 import { BarrioController } from "../controller/BarrioController.js";
 
+// Creamos una nueva instancia del router de Express.
+// Maneja las rutas de BArrio
 const router = Router();
 const barrioController = new BarrioController();
 
-// GET /api/barrios -> Obtener todos los barrios
+// Buscar todos los barrios
 router.get("/", (req, res) => barrioController.getAll(req, res));
 
-// GET /api/barrios/buscar?cor_sn=X&cor_oo=Y -> búsqueda por coordenadas
+// Buscar barrio por coordenadas
 router.get("/buscar", (req, res) => barrioController.buscarBarrio(req, res));
 
-// GET /api/barrios/123 -> Obtener un barrio por su ID
+// Buscar barrio por ID
 router.get("/:id", (req, res) => barrioController.getById(req, res));
 
-// POST /api/barrios -> Crear un nuevo barrio
+// Crear Barrio
 router.post("/", (req, res) => barrioController.create(req, res));
 
-// PUT /api/barrios/123 -> Actualizar un barrio existente
+// Actualizar un barrio por ID
 router.put("/:id", (req, res) => barrioController.update(req, res));
 
-// DELETE /api/barrios/123 -> Eliminar un barrio
+// Borrar un barrio por ID
 router.delete("/:id", (req, res) => barrioController.delete(req, res));
 
 export default router;
