@@ -1,0 +1,55 @@
+Capa Aplicaciones
+
+Realiza las operaciones y contiene las reglas de negocio
+Transforma datos para almacenar 
+Que hace la aplicación y bajo que reglas
+
+
+Capa Dominio
+
+Define que puede hacer la aplicación
+Define que datos que pueden pasar por la BD
+Al ser una capa independiente se puede utilizar otro gestor de BD sin afectar el resto de capas
+
+
+Capa Infraestructura
+Conexiones entre la BD y la lógica
+Implementan puertos del dominio
+Manejan librerías y frameworks externos
+
+Capa de Dominio (Los Planos de la Aplicación)
+
+Esta capa es el núcleo de todo. No sabe de bases de datos ni de APIs. Solo define las reglas del juego: qué se puede hacer con cada parte de nuestra aplicación (Barrios, Usuarios, etc.) y qué información se necesita para hacerlo. Es como el plano que le pasamos a los trabajadores.
+
+
+TypeORM permite trabajar con clases y objetos en lugar de escribir consultas SQL manuales.
+Cada clase representa una tabla, y cada instancia de esa clase representa una fila (registro) en la base de datos.
+
+
+Controller
+Se encarga de interactuar con el cliente
+Recibe peticiones por http
+Hace una primera validación
+Recibe el error y lo muestra entendible
+
+
+Entities
+
+Entidades de las bases de datos
+Mapa detrallado de la BD y sus tablas
+
+
+
+Routes
+
+Maneja ls direcciones de cada servicio
+Indica a donde debe apuntar la petición HTTP
+
+
+middleware
+
+FIltro de seguridad para rutas protegidad
+Valida si el token de usuario es valido
+EL teken esta programado para expirar en 1 hora
+
+
