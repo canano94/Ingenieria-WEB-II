@@ -19,11 +19,12 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-        .btn-delete {
+        .btn-delete, .btn-edit {
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
         }
-        .card:hover .btn-delete {
+        .card:hover .btn-delete,
+        .card:hover .btn-edit {
             opacity: 1;
         }
     </style>
@@ -160,22 +161,44 @@
                         break;
                     case 'barrio':
                         title = item.nombre;
-                        subtitle = item.ciudad;
+                        subtitle = `Índice de Seguridad: ${item.indiceSeguridad}`;
                         id = item.id;
                         break;
                     case 'favorite':
-                        title = `ID Barrio: ${item.barrioId}`;
+                        title = `Barrio: ${item.barrio.nombre}`;
                         subtitle = `ID Favorito: ${item.id}`;
                         id = item.id;
                         break;
                 }
-                // El botón de borrar no se mostrará si el ID no está definido (ej. en búsquedas)
-                const deleteButton = id ? `<button data-id="${id}" data-type="${type}" class="btn-delete absolute top-2 right-2 text-red-500 hover:text-red-700 text-2xl font-bold leading-none">&times;</button>` : '';
+
+                // --- Generación de botones de acción ---
+                const editButton = `
+                    <button data-id="${id}" data-type="${type}" class="btn-edit p-1 text-blue-500 hover:text-blue-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L14.732 3.732z"></path></svg>
+                    </button>
+                `;
+                const deleteButton = `
+                    <button data-id="${id}" data-type="${type}" class="btn-delete p-1 text-red-500 hover:text-red-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                `;
+
+                let actionButtons = '';
+                if (id) {
+                    if (type === 'user' || type === 'barrio') {
+                        actionButtons = editButton + deleteButton;
+                    } else if (type === 'favorite') {
+                        actionButtons = deleteButton;
+                    }
+                }
+
                 return `
                     <div class="card relative bg-gray-50 p-4 rounded-lg border border-gray-200 transition duration-300">
                         <p class="font-semibold text-gray-800">${title}</p>
                         <p class="text-sm text-gray-500">${subtitle}</p>
-                        ${deleteButton}
+                        <div class="absolute top-1 right-1 flex">
+                            ${actionButtons}
+                        </div>
                     </div>
                 `;
             };
@@ -194,9 +217,8 @@
 
                 try {
                     const response = await fetch(`${API_BASE_URL}/${endpoint}`, config);
-                    // Para respuestas 404, es mejor no mostrar un alert genérico
                     if (response.status === 404) {
-                        return null; // Devolvemos null para que la función que llama decida qué hacer
+                        return null; 
                     }
                     if (!response.ok) {
                         const errorData = await response.json();
@@ -207,7 +229,7 @@
                 } catch (error) {
                     console.error('Error en API:', error);
                     alert(error.message);
-                    return undefined; // Un valor distinto de null para diferenciar error de "no encontrado"
+                    return undefined; 
                 }
             };
             
@@ -250,7 +272,6 @@
                 e.preventDefault();
                 const email = e.target.loginEmail.value;
                 const password = e.target.loginPassword.value;
-                // Tu controller de login devuelve { message, token }
                 const data = await apiRequest('users/login', 'POST', { email, password });
                 if (data && data.token) {
                     authToken = data.token;
@@ -264,7 +285,6 @@
                 const name = e.target.registerName.value;
                 const email = e.target.registerEmail.value;
                 const password = e.target.registerPassword.value;
-                // Tu controller de registro devuelve { message, user } pero no loguea al usuario
                 const data = await apiRequest('users/register', 'POST', { name, email, password });
                 if (data && data.user) {
                     alert('¡Usuario registrado con éxito! Ahora inicia sesión para continuar.');
@@ -281,12 +301,10 @@
                 const cor_sn = e.target.corSN.value;
                 const cor_oo = e.target.corOO.value;
 
-                // Construimos la URL con query parameters
                 const endpoint = `barrios/buscar?cor_sn=${cor_sn}&cor_oo=${cor_oo}`;
                 const data = await apiRequest(endpoint);
 
                 if (data) {
-                    // El endpoint devuelve un solo objeto, no un array
                     barrioSearchResult.innerHTML = renderCard(data, 'barrio');
                 } else if (data === null) {
                     barrioSearchResult.innerHTML = `<p class="text-center text-orange-600 p-4 bg-orange-100 rounded-lg">No se encontró ningún barrio en esas coordenadas.</p>`;
@@ -318,15 +336,23 @@
                 }
             });
 
-            // --- Lógica para borrar (usando delegación de eventos) ---
+            // --- Lógica para editar y borrar (usando delegación de eventos) ---
             mainContent.addEventListener('click', async (e) => {
-                if (e.target.matches('.btn-delete')) {
-                    const id = e.target.dataset.id;
-                    const type = e.target.dataset.type;
+                const editButton = e.target.closest('.btn-edit');
+                if (editButton) {
+                    const id = editButton.dataset.id;
+                    const type = editButton.dataset.type;
+                    alert(`FUNCIONALIDAD DE EDICIÓN:\nEditar ${type} con ID: ${id}.\nAquí se podría abrir un modal con un formulario.`);
+                }
+
+                const deleteButton = e.target.closest('.btn-delete');
+                if (deleteButton) {
+                    const id = deleteButton.dataset.id;
+                    const type = deleteButton.dataset.type;
                     
                     if (!confirm(`¿Estás seguro de que quieres borrar este ${type}?`)) return;
 
-                    let endpoint = `${type}s/${id}`; // user -> users, barrio -> barrios, favorite -> favorites
+                    let endpoint = `${type}s/${id}`;
                     const success = await apiRequest(endpoint, 'DELETE');
                     if (success) {
                         console.log("Borrado exitoso, recargando datos...");
