@@ -43,7 +43,7 @@ export class FavoriteController {
             res.status(204).send();
         } catch (error: any) {
             // Si el error es de permisos, devolvemos 403 (Forbidden)
-            if (error.message.includes("permiso")) {
+            if (error.message.includes("no cuenta con permiso")) {
                 return res.status(403).json({ error: error.message });
             }
             // Para otros errores, devolvemos 404 (Not Found)

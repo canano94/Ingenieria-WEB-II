@@ -20,7 +20,7 @@ export class BarrioController {
       const cor_oo_str = req.query.cor_oo as string;
       // Validamos que las coordenadas estén presentes
       if (!cor_sn_str || !cor_oo_str) {
-        return res.status(400).json({ error: "Faltan las coordenadas cor_sn y/o cor_oo." });
+        return res.status(400).json({ error: "Faltan las coordenadas sur, norte, oriente y occidente." });
       }
       //Convertimos los datos de string a número.
       const cor_sn = parseFloat(cor_sn_str);

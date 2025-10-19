@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Barrios</title>
+    <!-- Incluyendo Tailwind CSS para un diseño rápido y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Usando la fuente Inter de Google Fonts para una mejor apariencia -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para un sutil efecto de hover en las tarjetas */
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .btn-delete {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .card:hover .btn-delete {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-6 md:p-12">
+        <header class="text-center mb-12">
+            <div class="flex justify-between items-center">
+                <div></div> <!-- Spacer -->
+                <h1 class="text-4xl font-bold text-gray-900">Panel de Administración</h1>
+                <button id="logoutButton" class="hidden bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300">
+                    Cerrar Sesión
+                </button>
+            </div>
+             <p id="welcomeMessage" class="text-lg text-gray-600 mt-2">Gestiona usuarios, barrios y favoritos de tu aplicación.</p>
+        </header>
+
+        <!-- SECCIÓN DE AUTENTICACIÓN -->
+        <section id="authSection" class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-center mb-6">Iniciar Sesión o Registrarse</h2>
+            <!-- Formulario de Login -->
+            <form id="loginForm" class="space-y-4">
+                 <input type="email" id="loginEmail" placeholder="Email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                 <input type="password" id="loginPassword" placeholder="Contraseña" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                 <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                     Iniciar Sesión
+                 </button>
+            </form>
+             <div class="my-4 text-center text-gray-400">o</div>
+            <!-- Formulario de Registro -->
+            <form id="registerForm" class="space-y-4">
+                 <input type="text" id="registerName" placeholder="Nombre completo" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                 <input type="email" id="registerEmail" placeholder="Email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                 <input type="password" id="registerPassword" placeholder="Contraseña" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                 <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">
+                     Registrarme
+                 </button>
+            </form>
+        </section>
+
+        <!-- CONTENIDO PRINCIPAL (Oculto hasta el login) -->
+        <main id="mainContent" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Columna 1: Gestión de Usuarios -->
+            <section class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Usuarios</h2>
+                <div id="userList" class="mt-6 space-y-3">
+                    <!-- Los usuarios se cargarán aquí -->
+                </div>
+            </section>
+
+            <!-- Columna 2: Gestión de Barrios -->
+            <section class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Barrios</h2>
+                
+                <!-- Formulario para buscar barrio por coordenadas -->
+                <form id="searchBarrioForm" class="space-y-4 my-6 p-4 bg-gray-50 rounded-lg border">
+                    <h3 class="font-semibold text-lg text-gray-700">Buscar por Coordenadas</h3>
+                    <div class="flex space-x-2">
+                        <input type="number" step="any" id="corSN" placeholder="Coordenada Sur-Norte" class="w-full px-4 py-2 border rounded-lg" required>
+                        <input type="number" step="any" id="corOO" placeholder="Coordenada Occ.-Oriente" class="w-full px-4 py-2 border rounded-lg" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600">
+                        Buscar Barrio
+                    </button>
+                </form>
+                <div id="barrioSearchResult" class="mb-6"></div>
+
+                <hr class="my-6">
+                
+                <!-- Formulario para agregar barrio -->
+                <form id="barrioForm" class="space-y-4">
+                    <h3 class="font-semibold text-lg text-gray-700">Agregar Nuevo Barrio</h3>
+                    <input type="text" id="barrioName" placeholder="Nombre del barrio" class="w-full px-4 py-2 border rounded-lg" required>
+                    <input type="text" id="barrioCity" placeholder="Ciudad" class="w-full px-4 py-2 border rounded-lg" required>
+                    <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700">
+                        Agregar Barrio
+                    </button>
+                </form>
+                <div id="barrioList" class="mt-6 space-y-3">
+                    <!-- Los barrios se cargarán aquí -->
+                </div>
+            </section>
+
+            <!-- Columna 3: Gestión de Favoritos -->
+            <section class="bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Mis Favoritos</h2>
+                 <form id="favoriteForm" class="space-y-4">
+                    <input type="text" id="favoriteBarrioId" placeholder="ID del Barrio a añadir" class="w-full px-4 py-2 border rounded-lg" required>
+                    <button type="submit" class="w-full bg-pink-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-pink-700">
+                        Marcar como Favorito
+                    </button>
+                </form>
+                <div id="favoriteList" class="mt-6 space-y-3">
+                     <!-- Los favoritos se cargarán aquí -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_BASE_URL = '/api';
+            let authToken = null;
+            
+            // --- Selectores del DOM ---
+            const authSection = document.getElementById('authSection');
+            const mainContent = document.getElementById('mainContent');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const logoutButton = document.getElementById('logoutButton');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+
+            const userList = document.getElementById('userList');
+            
+            const searchBarrioForm = document.getElementById('searchBarrioForm');
+            const barrioSearchResult = document.getElementById('barrioSearchResult');
+            const barrioForm = document.getElementById('barrioForm');
+            const barrioList = document.getElementById('barrioList');
+
+            const favoriteForm = document.getElementById('favoriteForm');
+            const favoriteList = document.getElementById('favoriteList');
+
+            // --- Funciones de renderizado ---
+            const renderCard = (item, type) => {
+                let title, subtitle, id;
+                switch (type) {
+                    case 'user':
+                        title = item.name;
+                        subtitle = item.email;
+                        id = item.id;
+                        break;
+                    case 'barrio':
+                        title = item.nombre;
+                        subtitle = item.ciudad;
+                        id = item.id;
+                        break;
+                    case 'favorite':
+                        title = `ID Barrio: ${item.barrioId}`;
+                        subtitle = `ID Favorito: ${item.id}`;
+                        id = item.id;
+                        break;
+                }
+                // El botón de borrar no se mostrará si el ID no está definido (ej. en búsquedas)
+                const deleteButton = id ? `<button data-id="${id}" data-type="${type}" class="btn-delete absolute top-2 right-2 text-red-500 hover:text-red-700 text-2xl font-bold leading-none">&times;</button>` : '';
+                return `
+                    <div class="card relative bg-gray-50 p-4 rounded-lg border border-gray-200 transition duration-300">
+                        <p class="font-semibold text-gray-800">${title}</p>
+                        <p class="text-sm text-gray-500">${subtitle}</p>
+                        ${deleteButton}
+                    </div>
+                `;
+            };
+
+            // --- Funciones genéricas de la API (ahora con manejo de token) ---
+            const apiRequest = async (endpoint, method = 'GET', body = null) => {
+                const headers = { 'Content-Type': 'application/json' };
+                if (authToken) {
+                    headers['Authorization'] = `Bearer ${authToken}`;
+                }
+
+                const config = { method, headers };
+                if (body) {
+                    config.body = JSON.stringify(body);
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/${endpoint}`, config);
+                    // Para respuestas 404, es mejor no mostrar un alert genérico
+                    if (response.status === 404) {
+                        return null; // Devolvemos null para que la función que llama decida qué hacer
+                    }
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `Error en la petición a ${endpoint}`);
+                    }
+                    if (response.status === 204) return true; // Para DELETE exitoso
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error en API:', error);
+                    alert(error.message);
+                    return undefined; // Un valor distinto de null para diferenciar error de "no encontrado"
+                }
+            };
+            
+            const fetchData = async (endpoint, listElement, type) => {
+                const data = await apiRequest(endpoint);
+                if (data) {
+                    listElement.innerHTML = data.length > 0
+                        ? data.map(item => renderCard(item, type)).join('')
+                        : `<p class="text-gray-500 text-center">No hay datos.</p>`;
+                } else if (data === null) {
+                     listElement.innerHTML = `<p class="text-gray-500 text-center">No se encontraron resultados.</p>`;
+                }
+            };
+
+            const loadAllData = () => {
+                fetchData('users', userList, 'user');
+                fetchData('favorites', favoriteList, 'favorite');
+                fetchData('barrios', barrioList, 'barrio');
+            };
+
+            // --- Lógica de UI ---
+            const showMainContent = () => {
+                authSection.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                logoutButton.classList.remove('hidden');
+                welcomeMessage.textContent = '¡Bienvenido! Has iniciado sesión.';
+                loadAllData();
+            };
+
+            const showAuthContent = () => {
+                mainContent.classList.add('hidden');
+                authSection.classList.remove('hidden');
+                logoutButton.classList.add('hidden');
+                welcomeMessage.textContent = 'Gestiona usuarios, barrios y favoritos de tu aplicación.';
+                authToken = null;
+            };
+
+            // --- Lógica de Autenticación ---
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = e.target.loginEmail.value;
+                const password = e.target.loginPassword.value;
+                // Tu controller de login devuelve { message, token }
+                const data = await apiRequest('users/login', 'POST', { email, password });
+                if (data && data.token) {
+                    authToken = data.token;
+                    loginForm.reset();
+                    showMainContent();
+                }
+            });
+
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = e.target.registerName.value;
+                const email = e.target.registerEmail.value;
+                const password = e.target.registerPassword.value;
+                // Tu controller de registro devuelve { message, user } pero no loguea al usuario
+                const data = await apiRequest('users/register', 'POST', { name, email, password });
+                if (data && data.user) {
+                    alert('¡Usuario registrado con éxito! Ahora inicia sesión para continuar.');
+                    registerForm.reset();
+                }
+            });
+
+            logoutButton.addEventListener('click', showAuthContent);
+
+            // --- Lógica de Entidades ---
+            searchBarrioForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                barrioSearchResult.innerHTML = ''; // Limpiar resultados anteriores
+                const cor_sn = e.target.corSN.value;
+                const cor_oo = e.target.corOO.value;
+
+                // Construimos la URL con query parameters
+                const endpoint = `barrios/buscar?cor_sn=${cor_sn}&cor_oo=${cor_oo}`;
+                const data = await apiRequest(endpoint);
+
+                if (data) {
+                    // El endpoint devuelve un solo objeto, no un array
+                    barrioSearchResult.innerHTML = renderCard(data, 'barrio');
+                } else if (data === null) {
+                    barrioSearchResult.innerHTML = `<p class="text-center text-orange-600 p-4 bg-orange-100 rounded-lg">No se encontró ningún barrio en esas coordenadas.</p>`;
+                }
+            });
+
+            barrioForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nombre = e.target.barrioName.value;
+                const ciudad = e.target.barrioCity.value;
+                const newBarrio = await apiRequest('barrios', 'POST', { nombre, ciudad });
+                if (newBarrio) {
+                    barrioForm.reset();
+                    fetchData('barrios', barrioList, 'barrio');
+                }
+            });
+
+            favoriteForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const barrioId = parseInt(e.target.favoriteBarrioId.value, 10);
+                if (isNaN(barrioId)) {
+                    alert("Por favor, introduce un ID de barrio válido.");
+                    return;
+                }
+                const newFavorite = await apiRequest('favorites', 'POST', { barrioId });
+                 if (newFavorite) {
+                    favoriteForm.reset();
+                    fetchData('favorites', favoriteList, 'favorite');
+                }
+            });
+
+            // --- Lógica para borrar (usando delegación de eventos) ---
+            mainContent.addEventListener('click', async (e) => {
+                if (e.target.matches('.btn-delete')) {
+                    const id = e.target.dataset.id;
+                    const type = e.target.dataset.type;
+                    
+                    if (!confirm(`¿Estás seguro de que quieres borrar este ${type}?`)) return;
+
+                    let endpoint = `${type}s/${id}`; // user -> users, barrio -> barrios, favorite -> favorites
+                    const success = await apiRequest(endpoint, 'DELETE');
+                    if (success) {
+                        console.log("Borrado exitoso, recargando datos...");
+                        loadAllData();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
